@@ -1,0 +1,1 @@
+ALTER TABLE `t_user` add COLUMN `role_id` int;

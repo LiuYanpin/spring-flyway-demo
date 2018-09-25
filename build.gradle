@@ -1,0 +1,57 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.5.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+plugins {
+    id "org.flywaydb.flyway" version "5.1.4"
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+
+group = 'com.thoughtworks'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-aop')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-web')
+
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
+
+    compile group: 'org.webjars.npm', name: 'jsonwebtoken', version: '8.2.1'
+    compile group: 'org.flywaydb', name: 'flyway-core', version: '5.1.4'
+
+    compile('mysql:mysql-connector-java')
+
+    runtime('mysql:mysql-connector-java')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.2.0'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.2.0'
+    testCompile group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.21.0'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.10.0'
+
+}
+
+flyway {
+    url = "jdbc:mysql://127.0.0.1/grad_stepup"
+    user = "bj_grad"
+    password = ''
+}
