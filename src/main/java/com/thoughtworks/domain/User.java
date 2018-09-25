@@ -25,6 +25,7 @@ public class User {
     private Role role;
 
     @OneToMany
+    @JoinColumn(name = "user_id")
     private List<Address> addresses;
 }
 

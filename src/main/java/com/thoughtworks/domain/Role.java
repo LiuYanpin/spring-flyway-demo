@@ -2,6 +2,7 @@ package com.thoughtworks.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -19,4 +20,12 @@ public class Role {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToMany
+    @JoinTable(
+            name = "t_role_privilege",
+            joinColumns = @JoinColumn(name = "role_code", referencedColumnName = "code"),
+            inverseJoinColumns = @JoinColumn(name = "privilege_code", referencedColumnName = "code")
+    )
+    private List<Privilege> privileges;
 }

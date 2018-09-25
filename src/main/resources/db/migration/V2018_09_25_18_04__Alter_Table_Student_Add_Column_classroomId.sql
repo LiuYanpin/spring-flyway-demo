@@ -1,0 +1,1 @@
+ALTER TABLE `t_student` add COLUMN `classroom_id` int;

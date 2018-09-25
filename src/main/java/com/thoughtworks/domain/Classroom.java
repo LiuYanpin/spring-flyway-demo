@@ -2,19 +2,20 @@ package com.thoughtworks.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-
+import java.util.List;
 import javax.persistence.*;
 
-@Entity
 @Getter
 @Setter
-@Table(name = "t_address")
-public class Address {
+@Entity
+@Table(name = "t_classroom")
+public class Classroom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String detail;
+    private String name;
 
-    @ManyToOne
-    private User user;
+    @OneToMany
+    @JoinColumn(name = "classroom_id")
+    private List<Student> students;
 }

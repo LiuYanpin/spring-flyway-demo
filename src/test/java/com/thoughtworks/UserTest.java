@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -71,14 +72,34 @@ public class UserTest {
     void should_get_user_id() {
         Role role = new Role();
         assertNotNull(role);
-        assertNotNull(role.getUser());
-
+        assertNull(role.getUser());
     }
 
     @Test
     void should_get_address() {
         Address address = new Address();
         assertNotNull(address);
+        assertNull(address.getUser());
+    }
+
+    @Test
+    void should_get_address_by_user() {
+        User user = new User();
+        assertNull(user.getAddresses());
+    }
+
+    @Test
+    void should_get_role_privileges() {
+        Role role = new Role();
+        assertNotNull(role);
+        assertNull(role.getPrivileges());
+    }
+
+    @Test
+    void should_get_privilege_roles() {
+        Privilege privilege = new Privilege();
+        assertNotNull(privilege);
+        assertNull(privilege.getRoles());
     }
 }
 
