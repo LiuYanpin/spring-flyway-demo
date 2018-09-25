@@ -1,13 +1,9 @@
 package com.thoughtworks;
 
+import com.thoughtworks.domain.Address;
+import com.thoughtworks.domain.Privilege;
 import com.thoughtworks.domain.Role;
 import com.thoughtworks.domain.User;
-import com.thoughtworks.domain.Privilege;
-
-import java.util.Arrays;
-import java.util.List;
-
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,9 +15,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.persistence.Table;
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -60,7 +57,28 @@ public class UserTest {
     void should_get_role_id() {
         User user = new User();
         assertNotNull(user);
-        List<Annotation> annotations = Arrays.stream(user.getClass().getAnnotations()).collect(Collectors.toList());
+        boolean flag = false;
+        Annotation[] annotations = user.getClass().getAnnotations();
+        for (Annotation annotation: annotations) {
+            if (annotation.getClass().equals(Table.class)) {
+                flag = true;
+            }
+        }
+        assertTrue(flag);
+    }
+
+    @Test
+    void should_get_user_id() {
+        Role role = new Role();
+        assertNotNull(role);
+        assertNotNull(role.getUser());
+
+    }
+
+    @Test
+    void should_get_address() {
+        Address address = new Address();
+        assertNotNull(address);
     }
 }
 

@@ -4,6 +4,7 @@ package com.thoughtworks.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -22,5 +23,8 @@ public class User {
     @OneToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToMany
+    private List<Address> addresses;
 }
 
