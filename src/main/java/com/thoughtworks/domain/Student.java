@@ -1,14 +1,16 @@
 package com.thoughtworks.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
+@Table(name = "t_student")
 @Getter
 @Setter
-@Table(name = "t_student")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,5 +20,14 @@ public class Student {
     private int height;
 
     @ManyToOne
+    @JoinColumn(name = "classroom_id")
     private Classroom classroom;
+
+    public Student(String name, int age, int height, Classroom classroom) {
+        this.name = name;
+        this.age = age;
+        this.height = height;
+        this.classroom = classroom;
+    }
 }
+

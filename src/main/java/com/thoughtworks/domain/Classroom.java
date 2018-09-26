@@ -1,21 +1,26 @@
 package com.thoughtworks.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-import java.util.List;
-import javax.persistence.*;
+import lombok.*;
 
-@Getter
-@Setter
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "t_classroom")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Classroom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "classroom_id")
-    private List<Student> students;
+    private List<Student> students = new ArrayList<>();
+
 }

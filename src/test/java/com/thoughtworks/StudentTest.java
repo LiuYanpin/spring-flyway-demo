@@ -4,6 +4,7 @@ import com.thoughtworks.domain.Classroom;
 import com.thoughtworks.domain.Student;
 import com.thoughtworks.repository.ClassroomRepository;
 import com.thoughtworks.repository.StudentRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,74 +13,80 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ActiveProfiles("test")
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-@ActiveProfiles("test")
 public class StudentTest {
 
     @Autowired
     ClassroomRepository classroomRepository;
+
     @Autowired
     StudentRepository studentRepository;
 
-    @Test
-    void should_get_true() {
-        assertTrue(true);
+    @AfterEach
+    void tearDown() {
+        classroomRepository.deleteAll();
+        studentRepository.deleteAll();
     }
 
     @Test
-    @Transactional
-    void should_create_class_successfully() {
+    void should_get_class_name() {
         Classroom classroom = new Classroom();
-        classroom.setName("class one");
+        classroom.setName("001");
         classroomRepository.save(classroom);
         assertThat(classroomRepository.findAll()).hasSize(1);
-
+        assertThat(classroomRepository.findAll().get(0).getName()).isEqualTo("001");
     }
 
     @Test
-    @Transactional
-    void should_create_class_second_successfully() {
+    void should_get_student_size() {
         Classroom classroom = new Classroom();
-        classroom.setName("class two");
-        classroomRepository.save(classroom);
-        assertThat(classroomRepository.findAll()).hasSize(1);
-    }
-
-    @Test
-    void should_get_student() {
-        Classroom classroom = new Classroom();
-        classroom.setName("1");
+        classroom.setName("1608");
         classroomRepository.save(classroom);
 
-        Student student1 = new Student();
-        student1.setName("sun ming");
-        student1.setAge(18);
-        student1.setHeight(180);
-        student1.setClassroom(classroom);
+        Student student1 = new Student("sun ming", 16, 170, classroom);
         studentRepository.save(student1);
-
-        Student student2 = new Student();
-        student2.setName("xu ya");
-        student2.setAge(16);
-        student2.setHeight(170);
-        student1.setClassroom(classroom);
-        studentRepository.save(student2);
-
-
-        Student student3 = new Student();
-        student3.setName("liu ping");
-        student3.setAge(18);
-        student3.setHeight(1750);
-        student1.setClassroom(classroom);
-        studentRepository.save(student3);
-
-        Iterable<Student> students = studentRepository.findAll();
-        assertThat(students).hasSize(3);
+        assertThat(studentRepository.findAll()).hasSize(1);
     }
+
+    @Test
+    void should_get_student_by_class() {
+        Classroom classroom = new Classroom();
+        classroom.setName("1609");
+        Classroom save = classroomRepository.save(classroom);
+
+        Student student1 = new Student("sun ming", 16, 170, classroom);
+        studentRepository.save(student1);
+        assertThat(classroomRepository.findById(save.getId()).get().getStudents()).hasSize(1);
+    }
+
+    @Test
+    void should_get_student_by_class_and_new_class() {
+        Student student1 = Student.builder().name("sun ming").age(16).height(170).build();
+        Classroom classroom = Classroom.builder().name("1607").build();
+        classroom.setStudents(Arrays.asList(student1));
+        classroomRepository.save(classroom);
+        assertThat(classroomRepository.findByName("1607").getStudents()).hasSize(1);
+        assertThat(studentRepository.findByName("sun ming").getId()).isNotNull();
+        assertThat(studentRepository.findByName("sun ming").getClassroom().getName()).isEqualTo("1607");
+    }
+
+    @Test
+    void should_get_student_name() {
+        Student student1 = Student.builder().name("sun ming").age(16).height(170).build();
+        Student student2 = Student.builder().name("sun ming2").age(16).height(165).build();
+        Classroom classroom = Classroom.builder().name("1607").build();
+        classroom.setStudents(Arrays.asList(student1, student2));
+        classroomRepository.save(classroom);
+        Student sunMing = studentRepository.findByName("sun ming");
+        assertThat(sunMing.getAge()).isEqualTo(16);
+
+    }
+
 
 }
